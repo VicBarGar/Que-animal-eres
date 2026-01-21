@@ -128,16 +128,22 @@ const preguntasPrincipales = [
 // ---------- PREGUNTAS DE DESEMPATE ----------
 const preguntasDesempate = [
 {texto:"En una decisión importante, ¿qué pesa más para ti?",opciones:[
- {t:"Seguridad y previsión",a:["Erizo","Ratón","Galápago"]},
- {t:"Oportunidad y rapidez",a:["Zorro","Nutria","Jabalí"]},
- {t:"Precisión y estrategia",a:["Halcón","Lechuza","Mantis"]},
- {t:"Constancia y resistencia",a:["Tejón","Sapo","Escarabajo"]}
+ {t:"Seguridad y previsión", a:["Erizo","Ratón","Galápago"]},
+ {t:"Oportunidad y rapidez", a:["Zorro","Nutria","Jabalí"]},
+ {t:"Precisión y estrategia", a:["Halcón","Lechuza","Mantis"]},
+ {t:"Constancia y resistencia", a:["Tejón","Sapo","Escarabajo"]}
 ]},
 {texto:"Cuando trabajas en equipo…",opciones:[
- {t:"Tomo la iniciativa",a:["Zorro","Cuervo","Nutria"]},
- {t:"Colaboro según convenga",a:["Petirrojo","Abeja","Galápago"]},
- {t:"Observo y actúo con precisión",a:["Halcón","Mantis","Víbora"]},
- {t:"Sigo el plan paso a paso",a:["Tejón","Sapo","Escarabajo"]}
+ {t:"Tomo la iniciativa", a:["Zorro","Cuervo","Nutria"]},
+ {t:"Colaboro según convenga", a:["Petirrojo","Abeja","Galápago"]},
+ {t:"Observo y actúo con precisión", a:["Halcón","Mantis","Víbora"]},
+ {t:"Sigo el plan paso a paso", a:["Tejón","Sapo","Escarabajo"]}
+]},
+{texto:"Cuando enfrentas un reto, ¿qué priorizas?",opciones:[
+ {t:"Planificación y seguridad", a:["Erizo","Ratón","Galápago"]},
+ {t:"Rapidez y acción", a:["Zorro","Nutria","Jabalí"]},
+ {t:"Precisión y estrategia", a:["Halcón","Lechuza","Mantis"]},
+ {t:"Resistencia y constancia", a:["Tejón","Sapo","Escarabajo"]}
 ]}
 ];
 
@@ -169,7 +175,7 @@ function mostrarPregunta(){
         return;
       }
     }
-    // Si ya no hay preguntas o sigue empate, aplicar prioridad
+    // Si ya no hay preguntas de desempate o sigue empate, aplicar prioridad
     mostrarResultado();
     return;
   }
@@ -215,3 +221,4 @@ mostrarPregunta();
 </script>
 </body>
 </html>
+
