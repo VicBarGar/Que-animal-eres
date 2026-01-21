@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>¿Qué animal se parece más a ti?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url('imagenes/fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  max-width: 720px;
+  width: 90%;
+  background: rgba(255,255,255,0.95);
+  margin: 40px 0;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+h1, h2 { text-align: center; color: #2e7d32; }
+.pregunta { margin-top: 30px; }
+
+.opcion {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: #66bb6a;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.25s ease;
+}
+.opcion:hover {
+  background: #43a047;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+.opcion:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.tarjeta {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: #f1f8e9;
+  padding: 22px;
+  border-radius: 18px;
+  margin-top: 30px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+.tarjeta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.tarjeta img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid #81c784;
+}
+
+@media (max-width: 480px) {
+  .container { padding: 20px; margin: 20px 0; }
+  .opcion { font-size: 14px; padding: 14px; }
+  .tarjeta { flex-direction: column; text-align: center; gap: 12px; }
+  .tarjeta img { width: 100px; height: 100px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>¿Qué animal se parece más a ti?</h1>
+<div id="test"></div>
+<div id="resultado" class="hidden"></div>
+</div>
+
+<script>
+// ---------- ANIMALES ----------
+const animales = {
+Zorro:{texto:"Astuto, adaptable y flexible.",img:"imagenes/zorro.jpg"},
+Nutria:{texto:"Curiosa, resolutiva y adaptable.",img:"imagenes/nutria.jpg"},
+Cuervo:{texto:"Inteligente, observador y estratégico.",img:"imagenes/cuervo.jpg"},
+Petirrojo:{texto:"Constante, atento y detallista.",img:"imagenes/petirrojo.jpg"},
+Ratón:{texto:"Ágil, prudente y vigilante.",img:"imagenes/raton.jpg"},
+Jabalí:{texto:"Oportunista, resistente y decidido.",img:"imagenes/jabali.jpg"},
+Tejón:{texto:"Persistente, trabajador y metódico.",img:"imagenes/tejon.jpg"},
+Erizo:{texto:"Protegido, reservado y cauto.",img:"imagenes/erizo.jpg"},
+Garza:{texto:"Paciente, precisa y silenciosa.",img:"imagenes/garza.jpg"},
+Halcón:{texto:"Especialista, rápido y certero.",img:"imagenes/halcon.jpg"},
+Abeja:{texto:"Activa, constante y autónoma.",img:"imagenes/abeja.jpg"},
+Lechuza:{texto:"Analítica, estratégica y nocturna.",img:"imagenes/lechuza.jpg"},
+Mantis:{texto:"Precisa, paciente y focalizada.",img:"imagenes/mantis.jpg"},
+Víbora:{texto:"Calculadora y selectiva.",img:"imagenes/vibora.jpg"},
+Salamandra:{texto:"Discreta y fiel a su entorno.",img:"imagenes/salamandra.jpg"},
+Sapo:{texto:"Persistente y resistente.",img:"imagenes/sapo.jpg"},
+Lagarto:{texto:"Eficiente en el uso de recursos.",img:"imagenes/lagarto.jpg"},
+Galápago:{texto:"Constante y de ritmo propio.",img:"imagenes/galapago.jpg"},
+Escarabajo:{texto:"Fuerte y resistente.",img:"imagenes/escarabajo.jpg"}
+};
+
+// ---------- PREGUNTAS PRINCIPALES ----------
+const preguntas = [
+{texto:"Cuando algo se complica, tú tiendes a…",opciones:[
+ {t:"Insistir y resistir",a:["Tejón","Sapo","Escarabajo"]},
+ {t:"Buscar alternativas",a:["Zorro","Nutria","Ratón"]},
+ {t:"Esperar el momento adecuado",a:["Garza","Lechuza","Mantis"]},
+ {t:"Reducir exposición y observar",a:["Erizo","Petirrojo","Galápago"]}
+]},
+{texto:"Ante un entorno nuevo…",opciones:[
+ {t:"Exploro con curiosidad",a:["Nutria","Cuervo","Zorro"]},
+ {t:"Analizo antes de actuar",a:["Lechuza","Garza","Salamandra"]},
+ {t:"Busco refugios claros",a:["Erizo","Ratón","Lagarto"]},
+ {t:"Actúo solo si hace falta",a:["Halcón","Mantis","Escarabajo"]}
+]},
+{texto:"En situaciones de presión…",opciones:[
+ {t:"Me adapto rápido",a:["Zorro","Ratón","Nutria"]},
+ {t:"Mantengo estrategia y constancia",a:["Tejón","Sapo","Escarabajo"]},
+ {t:"Espero oportunidad clara",a:["Halcón","Garza","Víbora"]},
+ {t:"Me retiro si no compensa",a:["Erizo","Salamandra","Galápago"]}
+]},
+{texto:"Mi energía diaria suele ser…",opciones:[
+ {t:"Constante",a:["Tejón","Abeja","Galápago"]},
+ {t:"Variable pero intensa",a:["Nutria","Zorro","Cuervo"]},
+ {t:"Muy focalizada",a:["Halcón","Mantis","Víbora"]},
+ {t:"Baja pero eficiente",a:["Lagarto","Sapo","Escarabajo"]}
+]},
+{texto:"Cuando decido actuar…",opciones:[
+ {t:"Con precisión",a:["Halcón","Mantis","Víbora"]},
+ {t:"Paso a paso",a:["Tejón","Garza","Galápago"]},
+ {t:"Improvisando",a:["Zorro","Nutria","Ratón"]},
+ {t:"Solo si es necesario",a:["Erizo","Salamandra","Escarabajo"]}
+]},
+{texto:"Mi relación con el riesgo es…",opciones:[
+ {t:"Muy calculada",a:["Víbora","Lechuza","Cuervo"]},
+ {t:"Moderada",a:["Zorro","Nutria","Petirrojo"]},
+ {t:"Baja",a:["Erizo","Ratón","Lagarto"]},
+ {t:"Asumible si compensa",a:["Halcón","Jabalí","Escarabajo"]}
+]},
+{texto:"Cuando tienes tareas que hacer todos los días, ¿cómo sueles afrontarlas?",opciones:[
+ {t:"Me aseguro de cumplir todo lo que me propuse para hoy",a:["Abeja","Tejón","Galápago"]},
+ {t:"Hago solo lo necesario y aprovecho lo que tengo",a:["Lagarto","Ratón","Sapo"]},
+ {t:"Hago únicamente lo que es imprescindible",a:["Salamandra","Erizo","Galápago"]},
+ {t:"Espero el momento adecuado y actúo con fuerza",a:["Escarabajo","Jabalí","Halcón"]}
+]}
+];
+
+// ---------- PREGUNTAS DE DESEMPATE ----------
+const desempate = [
+{texto:"En una decisión importante, ¿qué pesa más para ti?",opciones:[
+ {t:"Seguridad y previsión", a:["Erizo","Ratón","Galápago"]},
+ {t:"Oportunidad y rapidez", a:["Zorro","Nutria","Jabalí"]},
+ {t:"Precisión y estrategia", a:["Halcón","Lechuza","Mantis"]},
+ {t:"Constancia y resistencia", a:["Tejón","Sapo","Escarabajo"]}
+]},
+{texto:"Cuando trabajo en equipo…",opciones:[
+ {t:"Tomo la iniciativa", a:["Zorro","Cuervo","Nutria"]},
+ {t:"Colaboro según convenga", a:["Petirrojo","Abeja","Galápago"]},
+ {t:"Observo y actúo con precisión", a:["Halcón","Mantis","Víbora"]},
+ {t:"Sigo el plan paso a paso", a:["Tejón","Sapo","Escarabajo"]}
+]},
+{texto:"Cuando enfrento un reto, ¿qué priorizo?",opciones:[
+ {t:"Planificación y seguridad", a:["Erizo","Ratón","Galápago"]},
+ {t:"Rapidez y acción", a:["Zorro","Nutria","Jabalí"]},
+ {t:"Precisión y estrategia", a:["Halcón","Lechuza","Mantis"]},
+ {t:"Resistencia y constancia", a:["Tejón","Sapo","Escarabajo"]}
+]}
+];
+
+// ---------- CONTROL DEL TEST ----------
+let puntos = {};
+Object.keys(animales).forEach(a => puntos[a] = 0);
+let i = 0;
+let enDesempate = false;
+
+const test = document.getElementById("test");
+const res = document.getElementById("resultado");
+
+function mostrarPregunta() {
+  test.innerHTML = "";
+  const lista = enDesempate ? desempate : preguntas;
+
+  if (i >= lista.length) {
+    if (!enDesempate) {
+      const ranking = Object.entries(puntos).sort((a,b)=>b[1]-a[1]);
+      const max = ranking[0][1];
+      let candidatos = ranking.filter(r=>r[1]===max).map(r=>r[0]);
+      if (candidatos.length > 1) {
+        enDesempate = true;
+        i = 0;
+        mostrarPregunta();
+        return;
+      }
+    }
+    mostrarResultado();
+    return;
+  }
+
+  const p = lista[i];
+  const div = document.createElement("div");
+  div.className = "pregunta";
+  div.innerHTML = "<h2>" + p.texto + "</h2>";
+
+  p.opciones.forEach(o => {
+    const b = document.createElement("button");
+    b.className = "opcion";
+    b.textContent = o.t;
+    b.onclick = () => {
+      o.a.forEach(a => puntos[a]++);
+      i++;
+      mostrarPregunta();
+    };
+    div.appendChild(b);
+  });
+
+  test.appendChild(div);
+}
+
+function mostrarResultado() {
+  test.classList.add("hidden");
+  res.classList.remove("hidden");
+
+  const ranking = Object.entries(puntos).sort((a,b)=>b[1]-a[1]);
+  const max = ranking[0][1];
+  let candidatos = ranking.filter(r=>r[1]===max).map(r=>r[0]);
+
+  // Selección final aleatoria en caso de empate
+  const elegido = candidatos[Math.floor(Math.random() * candidatos.length)];
+
+  res.innerHTML = `<h2>Tu animal es</h2>
+    <div class="tarjeta">
+      <img src="${animales[elegido].img}" alt="${elegido}">
+      <div><h3>${elegido}</h3><p>${animales[elegido].texto}</p></div>
+    </div>`;
+}
+
+// ---------- INICIO ----------
+mostrarPregunta();
+</script>
+</body>
+</html>
